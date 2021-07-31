@@ -4,7 +4,7 @@ const StateContext = React.createContext();
 const DispatchContext = React.createContext();
 
 const initialState = {
-    logged: false,
+    logged: true,
     spinner: false,
 };
 const userReducer = (state, action) => {
@@ -59,10 +59,10 @@ export const useUserDispatch = () => {
     return context;
 };
 
-export const updateUser = (user) => (
+export const updateUser = (logged, user) => (
     {
         type: 'UPDATE_USER_LOGIN',
-        payload: { logged: true, user },
+        payload: { logged, user },
     }
 );
 

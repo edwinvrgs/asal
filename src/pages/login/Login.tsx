@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {Button, Dimmer, Form, Grid, Header, Image, Loader, Message, Segment} from 'semantic-ui-react';
 import {AsalLogo} from "../../assets";
 import {Redirect, useHistory} from "react-router-dom";
-import {setSpinner, useUserDispatch, useUserState} from "../../contexts/user";
+import {setSpinner, updateUser, useUserDispatch, useUserState} from "../../contexts/user";
 import useFormInput from "../../hooks/useFormInput";
 import {api} from "../../config/api";
 
@@ -23,6 +23,7 @@ const Login = () => {
             .then((response) => {
                 console.info(response);
                 if (response.status === 200){
+                    dispatch(updateUser(true, response.data))
                     history.push("admin-comidas")
                 }
                 dispatch(setSpinner(true))
