@@ -1,4 +1,4 @@
-import React, { useReducer, useContext } from 'react';
+import React, {useReducer, useContext, Dispatch} from 'react';
 
 const initialState = {
     logged: false,
@@ -6,7 +6,7 @@ const initialState = {
 };
 
 const StateContext = React.createContext(initialState);
-const DispatchContext = React.createContext((args) => null);
+const DispatchContext = React.createContext<Dispatch<any>>((args) => null);
 
 const userReducer = (state, action) => {
     switch (action.type) {
