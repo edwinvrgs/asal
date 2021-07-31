@@ -4,15 +4,16 @@ const StateContext = React.createContext();
 const DispatchContext = React.createContext();
 
 const initialState = {
-    logged: true,
+    logged: false,
 };
 const userReducer = (state, action) => {
     switch (action.type) {
-        case 'UPDATE_USER':
-            const { payload: { user: userInfo } } = action;
+        case 'UPDATE_USER_LOGIN':
+            const { payload: { logged, user: userInfo } } = action;
 
             return {
                 ...state,
+                logged,
                 ...userInfo,
             };
         default: {
@@ -41,3 +42,10 @@ export const useUserState = () => {
         ...context,
     };
 };
+
+export const updateUser = (user) => (
+    {
+        type: 'UPDATE_USER_LOGIN',
+        payload: { logged: true, user },
+    }
+);
