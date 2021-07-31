@@ -31,38 +31,41 @@ const Login = () => {
     if (logged) {
         return <Redirect to="dashboard" />
     }
-    return !spinner ? (
-        <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
-            <Grid.Column style={{ maxWidth: 450 }}>
-                <Header as='h2' color='teal' textAlign='center'>
-                    <Image src={AsalLogo} /> Log-in to your account
-                </Header>
-                <Form size='large'>
-                    <Segment stacked>
-                        <Form.Input {...email} fluid icon='user' iconPosition='left' placeholder='E-mail address' />
-                        <Form.Input
-                            {...password}
-                            fluid
-                            icon='lock'
-                            iconPosition='left'
-                            placeholder='Password'
-                            type='password'
-                        />
+    return (
+        <>
+            {spinner && (
+                <Dimmer active>
+                    <Loader />
+                </Dimmer>
+            )}
+            <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
+                <Grid.Column style={{ maxWidth: 450 }}>
+                    <Header as='h2' color='teal' textAlign='center'>
+                        <Image src={AsalLogo} /> Log-in to your account
+                    </Header>
+                    <Form size='large'>
+                        <Segment stacked>
+                            <Form.Input {...email} fluid icon='user' iconPosition='left' placeholder='E-mail address' />
+                            <Form.Input
+                                {...password}
+                                fluid
+                                icon='lock'
+                                iconPosition='left'
+                                placeholder='Password'
+                                type='password'
+                            />
 
-                        <Button color='teal' fluid size='large' onClick={submit}>
-                            Login
-                        </Button>
-                    </Segment>
-                </Form>
-                <Message>
-                    New to us? <a href='/signup'>Sign Up</a>
-                </Message>
-            </Grid.Column>
-        </Grid>
-    ) : (
-        <Dimmer active>
-            <Loader />
-        </Dimmer>
+                            <Button color='teal' fluid size='large' onClick={submit}>
+                                Login
+                            </Button>
+                        </Segment>
+                    </Form>
+                    <Message>
+                        New to us? <a href='/signup'>Sign Up</a>
+                    </Message>
+                </Grid.Column>
+            </Grid>
+        </>
     )
 }
 
