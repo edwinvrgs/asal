@@ -60,10 +60,10 @@ export const useUserDispatch = () => {
     return context;
 };
 
-export const updateUser = (user) => (
+export const updateUser = (logged, user) => (
     {
         type: 'UPDATE_USER_LOGIN',
-        payload: { logged: true, user },
+        payload: { logged, user },
     }
 );
 
