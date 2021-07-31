@@ -5,6 +5,7 @@ const DispatchContext = React.createContext();
 
 const initialState = {
     logged: false,
+    spinner: false,
 };
 const userReducer = (state, action) => {
     switch (action.type) {
@@ -15,6 +16,13 @@ const userReducer = (state, action) => {
                 ...state,
                 logged,
                 ...userInfo,
+            };
+        case 'UPDATE_SPINNER':
+            const { payload: { spinner } } = action;
+
+            return {
+                ...state,
+                spinner,
             };
         default: {
             throw new Error(`Unhandled action type: ${action.type}`);
@@ -43,9 +51,24 @@ export const useUserState = () => {
     };
 };
 
+export const useUserDispatch = () => {
+    const context = useContext(DispatchContext);
+    if (context === undefined) {
+        throw new Error('useUserDispatch must be used within a UserProvider');
+    }
+    return context;
+};
+
 export const updateUser = (user) => (
     {
         type: 'UPDATE_USER_LOGIN',
         payload: { logged: true, user },
+    }
+);
+
+export const setSpinner = (spinner) => (
+    {
+        type: 'UPDATE_SPINNER',
+        payload: { spinner },
     }
 );

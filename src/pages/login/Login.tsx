@@ -1,16 +1,37 @@
 import React from 'react'
-import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
+import {Button, Dimmer, Form, Grid, Header, Image, Loader, Message, Segment} from 'semantic-ui-react';
 import {AsalLogo} from "../../assets";
 import {Redirect} from "react-router-dom";
-import {useUserState} from "../../contexts/user";
+import {setSpinner, useUserDispatch, useUserState} from "../../contexts/user";
+import useFormInput from "../../hooks/useFormInput";
+import {api} from "../../config/api";
 
 const Login = () => {
-    const { logged } = useUserState();
+    const email = useFormInput('');
+    const password = useFormInput('');
+    const { logged, spinner } = useUserState();
+    const dispatch = useUserDispatch();
+    const submit = () => {
+        dispatch(setSpinner(true))
+        api.post("login", {
+            email: email.value,
+            password: password.value,
+        })
+            .then((response) => {
+                console.info(response);
+                dispatch(setSpinner(true))
+            })
+            .catch((error) => {
+                console.log('ERROR IN LOGIN', error);
+                dispatch(setSpinner(false))
+                throw error;
+            });
+    }
+
     if (logged) {
         return <Redirect to="dashboard" />
     }
-
-    return (
+    return !spinner ? (
         <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
             <Grid.Column style={{ maxWidth: 450 }}>
                 <Header as='h2' color='teal' textAlign='center'>
@@ -18,8 +39,9 @@ const Login = () => {
                 </Header>
                 <Form size='large'>
                     <Segment stacked>
-                        <Form.Input fluid icon='user' iconPosition='left' placeholder='E-mail address' />
+                        <Form.Input {...email} fluid icon='user' iconPosition='left' placeholder='E-mail address' />
                         <Form.Input
+                            {...password}
                             fluid
                             icon='lock'
                             iconPosition='left'
@@ -27,16 +49,20 @@ const Login = () => {
                             type='password'
                         />
 
-                        <Button color='teal' fluid size='large'>
+                        <Button color='teal' fluid size='large' onClick={submit}>
                             Login
                         </Button>
                     </Segment>
                 </Form>
                 <Message>
-                    New to us? <a href='/registro'>Sign Up</a>
+                    New to us? <a href='/signup'>Sign Up</a>
                 </Message>
             </Grid.Column>
         </Grid>
+    ) : (
+        <Dimmer active>
+            <Loader />
+        </Dimmer>
     )
 }
 
