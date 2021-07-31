@@ -3,14 +3,16 @@ import {Icon, Menu} from 'semantic-ui-react'
 import {AsalLogo} from "../../assets";
 import {updateUser, useUserDispatch} from "../../contexts/user";
 
-const Layout = props => {
+const Layout = () => {
     const [activeItem, setActiveItem] = useState('dashboard');
     const dispatch = useUserDispatch();
+
     const handleItemClick = (e, { name = 'dashboard' }) => setActiveItem(name)
+
     return (
         <Menu stackable>
             <Menu.Item>
-                <img src={AsalLogo} />
+                <img src={AsalLogo}  alt="Logo de ASAL"/>
             </Menu.Item>
 
             <Menu.Item

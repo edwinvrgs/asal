@@ -1,12 +1,14 @@
 import React from 'react';
+import {Redirect} from "react-router-dom";
 import {Button, Form, Grid, Header, Image, Segment } from "semantic-ui-react";
 import { Controller, useForm } from "react-hook-form";
+
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import {AsalLogo} from "../../assets";
 import {useUserState} from "../../contexts/user";
-import {Redirect} from "react-router-dom";
+import {AsalLogo} from "../../assets";
+import {signUp} from "../../services";
 
 const schema = yup.object().shape({
     name: yup.string().required(),
@@ -55,7 +57,10 @@ const SignUp = () => {
         resolver: yupResolver(schema)
     });
 
-    const onSubmit = data => console.log(data);
+    const onSubmit = data => {
+        const response = signUp(data);
+        console.log(response);
+    }
 
     if (logged) {
         return <Redirect to="dashboard" />;
