@@ -7,7 +7,6 @@ import {useUserState} from "../context/user";
 export const withAuth = (WrappedComponent) => {
     return () => {
         const state = useUserState();
-        console.info(state);
         const { logged } = state;
         return logged ? <WrappedComponent {...state}/> : <Redirect to="/login"/>;
     };
@@ -28,16 +27,16 @@ export const routes = [
     },
     {
         path: "/(.)*",
-        component: Layout,
+        component: withAuth(Layout),
         routes: [
             {
                 path: '/dashboard',
-                component: withAuth(Dashboard),
+                component: Dashboard,
+            },
+            {
+                component: NotFound,
             },
         ],
-    },
-    {
-        component: NotFound,
     },
 ];
 
