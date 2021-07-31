@@ -3,12 +3,18 @@ import {Button, Form, Grid, Header, Image, Message, Segment} from "semantic-ui-r
 
 import {AsalLogo} from "../../assets";
 import useFormInput from "../../hooks/useFormInput";
+import {useUserState} from "../../contexts/user";
+import {Redirect} from "react-router-dom";
 
 const SignUp = props => {
-
     const email = useFormInput('');
     const name = useFormInput('');
     const password = useFormInput('');
+
+    const { logged } = useUserState();
+    if (logged) {
+        return <Redirect to="dashboard" />;
+    }
 
     return (
         <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>

@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
 import {AsalLogo} from "../../assets";
 import {Redirect} from "react-router-dom";
-import {useUserState} from "../../context/user";
+import {useUserState} from "../../contexts/user";
 
 const Login = () => {
     const { logged } = useUserState();

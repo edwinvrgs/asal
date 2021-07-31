@@ -34,9 +34,13 @@ export const routes = [
                 component: Dashboard,
             },
             {
-                component: NotFound,
+                path: '/admin-comidas',
+                component: Dashboard,
             },
         ],
+    },
+    {
+        component: NotFound,
     },
 ];
 

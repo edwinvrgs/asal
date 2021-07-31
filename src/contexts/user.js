@@ -4,7 +4,7 @@ const StateContext = React.createContext();
 const DispatchContext = React.createContext();
 
 const initialState = {
-    logged: false,
+    logged: true,
 };
 const userReducer = (state, action) => {
     switch (action.type) {
