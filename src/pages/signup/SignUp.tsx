@@ -5,6 +5,8 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import {AsalLogo} from "../../assets";
+import {useUserState} from "../../contexts/user";
+import {Redirect} from "react-router-dom";
 
 const schema = yup.object().shape({
     name: yup.string().required(),
@@ -48,11 +50,16 @@ const Input = React.forwardRef(({ control, name, type, icon, placeholder }: Inpu
 ))
 
 const SignUp = () => {
+    const { logged } = useUserState();
     const { control, handleSubmit  } = useForm({
         resolver: yupResolver(schema)
     });
 
     const onSubmit = data => console.log(data);
+
+    if (logged) {
+        return <Redirect to="dashboard" />;
+    }
 
     return (
         <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
