@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const baseURL = "https://api-asal.herokuapp.com/";
+export const baseURL = "https://api-asal.herokuapp.com/api/";
 const authToken = '';
 
 const headers = {
