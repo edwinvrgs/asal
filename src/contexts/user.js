@@ -4,7 +4,7 @@ const StateContext = React.createContext();
 const DispatchContext = React.createContext();
 
 const initialState = {
-    logged: true,
+    logged: false,
     spinner: false,
 };
 const userReducer = (state, action) => {
