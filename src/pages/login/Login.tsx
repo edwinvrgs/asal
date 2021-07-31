@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {Button, Dimmer, Form, Grid, Header, Image, Loader, Message, Segment} from 'semantic-ui-react';
 import {AsalLogo} from "../../assets";
-import {Redirect, useHistory} from "react-router-dom";
+import {Redirect, useHistory, Link} from "react-router-dom";
 import {setSpinner, updateUser, useUserDispatch, useUserState} from "../../contexts/user";
 import useFormInput from "../../hooks/useFormInput";
 import {api} from "../../config/api";
@@ -79,7 +79,11 @@ const Login = () => {
                         )}
                     </Form>
                     <Message>
-                        New to us? <a href='/signup'>Sign Up</a>
+                        New to us? <Link
+                        to="/signup"
+                    >
+                        Sign Up
+                    </Link>
                     </Message>
                 </Grid.Column>
             </Grid>
