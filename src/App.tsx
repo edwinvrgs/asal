@@ -8,7 +8,7 @@ const App = () => (
         <BrowserRouter>
             <Switch>
                 {routes.map((route) => (
-                    <RouteWithSubRoutes {...route} />
+                    <RouteWithSubRoutes key={route.path ?? 'not-found'} {...route} />
                 ))}
             </Switch>
         </BrowserRouter>
