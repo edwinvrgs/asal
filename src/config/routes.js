@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Redirect } from 'react-router-dom';
 import { SignUp, Login, Dashboard } from '../pages';
 import { Layout } from '../components'
-import {useUserState} from "../context/user";
+import {useUserState} from "../contexts/user";
 
 export const withAuth = (WrappedComponent) => {
     return () => {

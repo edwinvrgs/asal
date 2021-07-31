@@ -1,11 +1,12 @@
 import React, { useReducer, useContext } from 'react';
+
 const StateContext = React.createContext();
 const DispatchContext = React.createContext();
 
 const initialState = {
     logged: false,
 };
-const reducer = (state, action) => {
+const userReducer = (state, action) => {
     switch (action.type) {
         case 'UPDATE_USER':
             const { payload: { user: userInfo } } = action;
@@ -21,7 +22,7 @@ const reducer = (state, action) => {
 };
 
 export const UserProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(reducer, { ...initialState });
+    const [state, dispatch] = useReducer(userReducer, { ...initialState });
     return (
         <StateContext.Provider value={state}>
             <DispatchContext.Provider value={dispatch}>
