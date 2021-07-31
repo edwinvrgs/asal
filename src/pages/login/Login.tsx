@@ -9,10 +9,13 @@ import {api} from "../../config/api";
 const Login = () => {
     const email = useFormInput('');
     const password = useFormInput('');
+    const [errorMessage, setErrorMessage] = useState(false);
+
     const { logged, spinner } = useUserState();
+
     const history = useHistory();
     const dispatch = useUserDispatch();
-    const [errorMessage, setErrorMessage] = useState(false);
+
     const submit = () => {
         dispatch(setSpinner(true))
         setErrorMessage(false)
