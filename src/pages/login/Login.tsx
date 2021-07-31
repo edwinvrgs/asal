@@ -4,7 +4,7 @@ import {AsalLogo} from "../../assets";
 import {Redirect, useHistory} from "react-router-dom";
 import {setSpinner, updateUser, useUserDispatch, useUserState} from "../../contexts/user";
 import useFormInput from "../../hooks/useFormInput";
-import {api} from "../../config/api";
+import {API} from "../../config/api";
 
 const Login = () => {
     const email = useFormInput('');
@@ -19,7 +19,7 @@ const Login = () => {
     const submit = () => {
         dispatch(setSpinner(true))
         setErrorMessage(false)
-        api.post("auth/login", {
+        API.post("auth/login", {
             email: email.value,
             password: password.value,
         })

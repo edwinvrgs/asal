@@ -1,14 +1,19 @@
-import {api} from "../config/api";
+import {API} from "../config/api";
 
-export const signUp = async ({ data }) => {
+export const signUp = async (data) => {
     try {
-        return api.post("auth/signup", data);
+        return API.post("auth/signup", data);
     } catch (e) {
         console.log('Error in Sign Up service');
-        console.error(e);
+        console.log(e);
     }
 }
 
-export const login = () => {
-// Login service
+export const login = (data) => {
+    try {
+        return API.post("auth/login", data);
+    } catch (e) {
+        console.log('Error in Login service');
+        console.log(e);
+    }
 }

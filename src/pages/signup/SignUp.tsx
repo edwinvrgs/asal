@@ -25,39 +25,37 @@ type InputProps = {
     placeholder?: string,
 }
 
-const Input = React.forwardRef(({ control, name, type, icon, placeholder }: InputProps, ref) => (
-    <>
-        <Controller
-            control={control}
-            name={name}
-            render={({field: { onChange, onBlur, value, name }, fieldState: { error }}) => (
-                 <>
-                     <Form.Input
-                         error={!!error}
-                         name={name}
-                         onChange={onChange}
-                         onBlur={onBlur}
-                         value={value}
-                         type={type}
-                         iconPosition='left'
-                         fluid
-                         icon={icon}
-                         placeholder={placeholder}
-                     />
-                     <p>{error?.message}</p>
-                 </>
-            )}
-        />
-    </>
-))
+const Input = ({ control, name, type, icon, placeholder }: InputProps) => (
+    <Controller
+        control={control}
+        name={name}
+        render={({field, fieldState: { error }}) => (
+             <>
+                 <Form.Input
+                     type={type}
+                     iconPosition='left'
+                     fluid
+                     icon={icon}
+                     placeholder={placeholder}
+                     error={!!error}
+                     {...field}
+                 />
+                 <p>{error?.message}</p>
+             </>
+        )}
+    />
+)
 
 const SignUp = () => {
     const { logged } = useUserState();
-    const { control, handleSubmit  } = useForm({
+    const { control, handleSubmit } = useForm({
         resolver: yupResolver(schema)
     });
 
     const onSubmit = data => {
+        console.log({ data })
+
+        return;
         const response = signUp(data);
         console.log(response);
     }
@@ -75,9 +73,10 @@ const SignUp = () => {
                 <Form size='large' onSubmit={handleSubmit(onSubmit)}>
                     <Segment stacked>
                         <Input name="name" icon="user" placeholder="Ingrese su nombre" control={control} />
-                        <Input name="email" icon="mail" placeholder="Ingrese su correo" control={control}  />
-                        <Input name="password" icon="lock" placeholder="Password" control={control}/>
-                        <Button color='teal' fluid size='large'>Sign Up</Button>
+                        <Input name="age" icon="user" type="number" placeholder="Ingrese su edad" control={control} />
+                        <Input name="email" icon="mail" placeholder="Ingrese su correo" control={control} />
+                        <Input name="password" icon="lock" type="password" placeholder="Ingrese su contraseña" control={control}/>
+                        <Button type="submit" color='teal' fluid size='large'>Sign Up</Button>
                     </Segment>
                 </Form>
             </Grid.Column>

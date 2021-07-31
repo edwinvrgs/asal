@@ -18,7 +18,7 @@ export const getConfigHeadersAuth = (config) => {
     return config;
 };
 
-export const api = axios.create({
+export const API = axios.create({
     baseURL: baseURL,
     timeout: 400000,
     headers: {
@@ -27,7 +27,7 @@ export const api = axios.create({
     },
 });
 
-api.interceptors.request.use(
+API.interceptors.request.use(
     (config) => getConfigHeadersAuth(config),
     (error) => {
         console.error(error);
