@@ -49,7 +49,7 @@ export const RouteWithSubRoutes = (route) => (
             <>
                 <route.component{...props}/>
                 {route.routes?.map(subRoute => (
-                    <Route path={subRoute.path} exact={subRoute.exact} render={(props) => (
+                    <Route key={subRoute.path} path={subRoute.path} exact={subRoute.exact} render={(props) => (
                         <route.component {...props} {...subRoute} />
                     )}/>
                 ))}
