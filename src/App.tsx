@@ -1,7 +1,7 @@
 import React from 'react';
 import {BrowserRouter, Switch} from "react-router-dom";
 import {routes, RouteWithSubRoutes} from "./config";
-import {UserProvider} from "./context/user";
+import {UserProvider} from "./contexts/user";
 
 const App = () => (
     <UserProvider>
