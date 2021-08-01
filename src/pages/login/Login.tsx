@@ -17,28 +17,23 @@ const Login = () => {
     const dispatch = useUserDispatch();
 
     const onSubmit = async () => {
-        dispatch(setSpinner(true))
+        dispatch(setSpinner(1))
         setErrorMessage(false)
-
+        const response = await login({
+            email: email.value,
+            password: password.value,
+        });
         try {
-            const response = await login({
-                email: email.value,
-                password: password.value,
-            });
-
             if (response?.status === 200){
                 dispatch(updateUser(response.data))
                 history.push('dashboard')
             }
-        } catch (e) {
-            console.log(e);
-
-            if (e.response.status === 422) {
-                setErrorMessage(true)
-                console.info("Credenciales invalidas", e.response)
-            }
         } finally {
-            dispatch(setSpinner(false))
+            if (response?.response?.status === 422 || response?.response?.status === 401) {
+                setErrorMessage(true)
+                console.info("Credenciales invalidas", response?.response)
+            }
+            dispatch(setSpinner(0))
         }
     }
 
@@ -48,7 +43,7 @@ const Login = () => {
 
     return (
         <>
-            {spinner && (
+            {spinner === 1 && (
                 <Dimmer active>
                     <Loader />
                 </Dimmer>
@@ -76,7 +71,7 @@ const Login = () => {
                         </Segment>
                         {errorMessage && (
                             <Message
-                                error
+                                negative
                                 header='Credenciales invalidas'
                                 content='Por favor verifique que el email y contraseña sean correctos'
                             />
