@@ -4,47 +4,48 @@ import {AsalLogo} from "../../assets";
 import {Redirect, useHistory, Link} from "react-router-dom";
 import {setSpinner, updateUser, useUserDispatch, useUserState} from "../../contexts/user";
 import useFormInput from "../../hooks/useFormInput";
-import {API} from "../../config/api";
+import {login} from "../../services";
 
 const Login = () => {
     const email = useFormInput('');
     const password = useFormInput('');
     const [errorMessage, setErrorMessage] = useState(false);
 
-    const { logged, spinner } = useUserState();
+    const { user, spinner } = useUserState();
 
     const history = useHistory();
     const dispatch = useUserDispatch();
 
-    const submit = () => {
+    const onSubmit = async () => {
         dispatch(setSpinner(true))
         setErrorMessage(false)
-        API.post("auth/login", {
-            email: email.value,
-            password: password.value,
-        })
-            .then((response) => {
-                console.info(response);
-                if (response.status === 200){
-                    dispatch(updateUser(true, response.data))
-                    history.push("admin-comidas")
-                }
-                dispatch(setSpinner(true))
-            })
-            .catch((error) => {
-                console.log('ERROR IN LOGIN', error);
-                if (error.response.status === 422) {
-                    setErrorMessage(true)
-                    console.info("CREDENCIALES INVALIDAS", error.response)
-                }
-                dispatch(setSpinner(false))
-                throw error;
+
+        try {
+            const response = await login({
+                email: email.value,
+                password: password.value,
             });
+
+            if (response?.status === 200){
+                dispatch(updateUser(response.data))
+                history.push('dashboard')
+            }
+        } catch (e) {
+            console.log(e);
+
+            if (e.response.status === 422) {
+                setErrorMessage(true)
+                console.info("Credenciales invalidas", e.response)
+            }
+        } finally {
+            dispatch(setSpinner(false))
+        }
     }
 
-    if (logged) {
+    if (user) {
         return <Redirect to="dashboard" />
     }
+
     return (
         <>
             {spinner && (
@@ -69,7 +70,7 @@ const Login = () => {
                                 type='password'
                             />
 
-                            <Button color='teal' fluid size='large' onClick={submit}>
+                            <Button color='teal' fluid size='large' onClick={onSubmit}>
                                 Login
                             </Button>
                         </Segment>

@@ -1,7 +1,7 @@
 import React from 'react';
-import {Redirect} from "react-router-dom";
+import {Redirect, useHistory} from "react-router-dom";
 import {Button, Form, Grid, Header, Image, Segment } from "semantic-ui-react";
-import { Controller, useForm } from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
 
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -9,58 +9,37 @@ import * as yup from "yup";
 import {useUserState} from "../../contexts/user";
 import {AsalLogo} from "../../assets";
 import {signUp} from "../../services";
+import {Input} from "../../components";
 
-const schema = yup.object().shape({
-    name: yup.string().required(),
+const userSchema = yup.object().shape({
+    nombre: yup.string().required(),
     email: yup.string().email().required(),
-    age: yup.number().positive().integer().required(),
-    password: yup.string().required(),
+    password: yup.string().required().min(5),
+    sexo: yup.string().oneOf(["H", "M"]).required(),
+    edad: yup.number().positive().integer().required().min(18),
+    peso: yup.number().positive().integer().required().min(10),
+    actividad_fisica: yup.number().oneOf([1, 2, 3, 4, 5, 6]).required(),
 });
 
-type InputProps = {
-    control: any,
-    name: string,
-    type?: string,
-    icon?: string,
-    placeholder?: string,
-}
-
-const Input = ({ control, name, type, icon, placeholder }: InputProps) => (
-    <Controller
-        control={control}
-        name={name}
-        render={({field, fieldState: { error }}) => (
-             <>
-                 <Form.Input
-                     type={type}
-                     iconPosition='left'
-                     fluid
-                     icon={icon}
-                     placeholder={placeholder}
-                     error={!!error}
-                     {...field}
-                 />
-                 <p>{error?.message}</p>
-             </>
-        )}
-    />
-)
-
 const SignUp = () => {
-    const { logged } = useUserState();
+    const history = useHistory();
+    const { user } = useUserState();
     const { control, handleSubmit } = useForm({
-        resolver: yupResolver(schema)
+        resolver: yupResolver(userSchema)
     });
 
-    const onSubmit = data => {
-        console.log({ data })
+    const onSubmit = async data => {
+        try {
+            await signUp(data);
+            alert('Usuario creado con exito');
 
-        return;
-        const response = signUp(data);
-        console.log(response);
+            history.push('login')
+        } catch (e) {
+            console.log(e);
+        }
     }
 
-    if (logged) {
+    if (user) {
         return <Redirect to="dashboard" />;
     }
 
@@ -72,8 +51,62 @@ const SignUp = () => {
                 </Header>
                 <Form size='large' onSubmit={handleSubmit(onSubmit)}>
                     <Segment stacked>
-                        <Input name="name" icon="user" placeholder="Ingrese su nombre" control={control} />
-                        <Input name="age" icon="user" type="number" placeholder="Ingrese su edad" control={control} />
+                        <Input name="nombre" icon="user" placeholder="Ingrese su nombre" control={control} />
+                        <Controller
+                            control={control}
+                            name="sexo"
+                            render={({field, fieldState: { error }}) =>
+                                <Form.Select
+                                    {...field}
+                                    onChange={(_, { value }) => field.onChange(value)}
+                                    error={error?.message}
+                                    placeholder="Seleccione su sexo"
+                                    options={[
+                                        { key: 'H', value: 'H', text: 'Hombre' },
+                                        { key: 'M', value: 'M', text: 'Mujer' },
+                                    ]}
+                                />
+                            }
+                        />
+                        <Input name="edad" icon="user" type="number" placeholder="Ingrese su edad" control={control} />
+                        <Input name="peso" icon="user" type="number" placeholder="Ingrese su peso" control={control} />
+                        <Controller
+                            control={control}
+                            name="actividad_fisica"
+                            render={({field, fieldState: { error }}) =>
+                                <>
+                                    <Form.Field>
+                                        <label htmlFor="actividad_fisica">Del 1 al 6, cuanta actividad fisica realiza mensualmente</label>
+                                    </Form.Field>
+                                    <Form.Field error={error?.message}>
+                                        <Grid columns={2} divided>
+                                            <Grid.Column>
+                                                {Array.from({ length: 3 }).map((_, index) =>
+                                                    <Form.Radio
+                                                        {...field}
+                                                        key={index + 4}
+                                                        onChange={() => field.onChange(index + 1)}
+                                                        label={index + 1}
+                                                        checked={field.value === index + 1}
+                                                    />
+                                                )}
+                                            </Grid.Column>
+                                            <Grid.Column>
+                                                {Array.from({ length: 3 }).map((_, index) =>
+                                                    <Form.Radio
+                                                        {...field}
+                                                        key={index + 4}
+                                                        onChange={() => field.onChange(index + 4)}
+                                                        label={index + 4}
+                                                        checked={field.value === index + 4}
+                                                    />
+                                                )}
+                                            </Grid.Column>
+                                        </Grid>
+                                    </Form.Field>
+                                </>
+                            }
+                        />
                         <Input name="email" icon="mail" placeholder="Ingrese su correo" control={control} />
                         <Input name="password" icon="lock" type="password" placeholder="Ingrese su contraseña" control={control}/>
                         <Button type="submit" color='teal' fluid size='large'>Sign Up</Button>

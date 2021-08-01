@@ -7,8 +7,8 @@ import {useUserState} from "../contexts/user";
 export const withAuth = (WrappedComponent) => {
     return () => {
         const state = useUserState();
-        const { logged } = state;
-        return logged ? <WrappedComponent {...state}/> : <Redirect to="/login"/>;
+        const { user } = state;
+        return user ? <WrappedComponent {...state}/> : <Redirect to="/login"/>;
     };
 }
 
@@ -32,10 +32,12 @@ export const routes = [
             {
                 path: '/dashboard',
                 component: Dashboard,
+                exact: true
             },
             {
-                path: '/admin-comidas',
+                path: '/comidas',
                 component: Dashboard,
+                exact: true
             },
         ],
     },
@@ -53,7 +55,7 @@ export const RouteWithSubRoutes = (route) => (
                 <route.component{...props}/>
                 {route.routes?.map(subRoute => (
                     <Route key={subRoute.path} path={subRoute.path} exact={subRoute.exact} render={(props) => (
-                        <route.component {...props} {...subRoute} />
+                        <subRoute.component {...props} {...subRoute} />
                     )}/>
                 ))}
             </>

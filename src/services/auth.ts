@@ -1,6 +1,6 @@
 import {API} from "../config/api";
 
-export const signUp = async (data) => {
+export const signUp = (data) => {
     try {
         return API.post("auth/signup", data);
     } catch (e) {
@@ -9,11 +9,28 @@ export const signUp = async (data) => {
     }
 }
 
-export const login = (data) => {
+export const login = async (data) => {
     try {
-        return API.post("auth/login", data);
+        const response = await API.post("auth/login", data);
+
+        localStorage.setItem('user', JSON.stringify(response.data));
+
+        return response;
     } catch (e) {
         console.log('Error in Login service');
+        console.log(e);
+    }
+}
+
+export const logout = async () => {
+    try {
+        const response = await API.get("auth/logout");
+
+        localStorage.removeItem('user');
+
+        return response;
+    } catch (e) {
+        console.log('Error in Logout service');
         console.log(e);
     }
 }

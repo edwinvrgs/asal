@@ -2,19 +2,14 @@ import axios from 'axios';
 
 export const baseURL = "https://api-asal.herokuapp.com/api/";
 
-const authToken = '';
+export const getConfig = (config) => {
+    const userJSON = localStorage.getItem('user');
+    const user = userJSON ? JSON.parse(userJSON) : null;
 
-export const getConfigHeadersAuth = (config) => {
-    if (
-        !config?.headers?.Authorization
-        || config?.headers?.Authorization === `Bearer ${authToken}`
-    ) {
-        const token = localStorage.getItem('access_token');
-
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
+    if (user) {
+        config.headers.Authorization = `${user.token_type} ${user.access_token}`;
     }
+
     return config;
 };
 
@@ -23,12 +18,11 @@ export const API = axios.create({
     timeout: 400000,
     headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${authToken}`,
     },
 });
 
 API.interceptors.request.use(
-    (config) => getConfigHeadersAuth(config),
+    (config) => getConfig(config),
     (error) => {
         console.error(error);
         Promise.reject(error);

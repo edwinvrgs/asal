@@ -2,12 +2,25 @@ import React, {useState} from 'react';
 import {Icon, Menu} from 'semantic-ui-react'
 import {AsalLogo} from "../../assets";
 import {updateUser, useUserDispatch} from "../../contexts/user";
+import {logout} from "../../services";
 
 const Layout = () => {
     const [activeItem, setActiveItem] = useState('dashboard');
     const dispatch = useUserDispatch();
 
-    const handleItemClick = (e, { name = 'dashboard' }) => setActiveItem(name)
+    const handleItemClick = (e, { name = 'dashboard' }) => setActiveItem(name);
+
+    const onLogout = async (e, props) => {
+        try {
+            await logout();
+
+            dispatch(updateUser(null));
+
+            handleItemClick(e, props);
+        } catch (e) {
+            console.log(e);
+        }
+    }
 
     return (
         <Menu stackable>
@@ -24,7 +37,7 @@ const Layout = () => {
             </Menu.Item>
 
             <Menu.Item
-                name='admin comidas'
+                name='comidas'
                 active={activeItem === 'admin comidas'}
                 onClick={handleItemClick}
             >
@@ -45,10 +58,7 @@ const Layout = () => {
                     name='sign-in'
                     position='right'
                     active={activeItem === 'sign-in'}
-                    onClick={(e, props) => {
-                        dispatch(updateUser(false, {}));
-                        handleItemClick(e, props);
-                    }}
+                    onClick={onLogout}
                 >
                     Sign out
                 </Menu.Item>

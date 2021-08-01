@@ -1,22 +1,21 @@
 import React, {useReducer, useContext, Dispatch} from 'react';
 
-const initialState = {
-    logged: false,
+const initialState = (user) => ({
+    user: user ?? null,
     spinner: false,
-};
+});
 
-const StateContext = React.createContext(initialState);
+const StateContext = React.createContext(initialState(null));
 const DispatchContext = React.createContext<Dispatch<any>>((args) => null);
 
 const userReducer = (state, action) => {
     switch (action.type) {
-        case 'UPDATE_USER_LOGIN':
-            const { payload: { logged, user: userInfo } } = action;
+        case 'UPDATE_USER':
+            const { payload: { user } } = action;
 
             return {
                 ...state,
-                logged,
-                ...userInfo,
+                user,
             };
         case 'UPDATE_SPINNER':
             const { payload: { spinner } } = action;
@@ -32,7 +31,10 @@ const userReducer = (state, action) => {
 };
 
 export const UserProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(userReducer, initialState);
+    const user = localStorage.getItem('user');
+
+    const [state, dispatch] = useReducer(userReducer, initialState(user));
+
     return (
         <StateContext.Provider value={state}>
             <DispatchContext.Provider value={dispatch}>
@@ -47,9 +49,7 @@ export const useUserState = () => {
     if (context === undefined) {
         throw new Error('useUserState must be used within a UserProvider');
     }
-    return {
-        ...context,
-    };
+    return context;
 };
 
 export const useUserDispatch = () => {
@@ -60,10 +60,10 @@ export const useUserDispatch = () => {
     return context;
 };
 
-export const updateUser = (logged, user) => (
+export const updateUser = (user) => (
     {
-        type: 'UPDATE_USER_LOGIN',
-        payload: { logged, user },
+        type: 'UPDATE_USER',
+        payload: { user },
     }
 );
 
