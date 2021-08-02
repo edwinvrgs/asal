@@ -38,7 +38,7 @@ const Layout = () => {
 
             <Menu.Item
                 name='comidas'
-                active={activeItem === 'admin comidas'}
+                active={activeItem === 'comidas'}
                 onClick={handleItemClick}
             >
                 Admin Comidas
