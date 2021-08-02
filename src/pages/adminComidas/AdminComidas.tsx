@@ -33,7 +33,7 @@ const AdminComidas = () => {
         })
     }
 
-    const GetIngredients = async () => {
+    const GetIngredients = useCallback(async () => {
         dispatch(setSpinner(spinner+1))
         const response = await getIngredientFetch();
         try {
@@ -45,9 +45,10 @@ const AdminComidas = () => {
         } finally {
             dispatch(setSpinner(spinner-1))
         }
-    }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
-    const GetFoods = async () => {
+    const GetFoods = useCallback(async () => {
         dispatch(setSpinner(spinner+1))
         const response = await getFoodsFetch();
         try {
@@ -57,7 +58,8 @@ const AdminComidas = () => {
         } finally {
             dispatch(setSpinner(spinner-1))
         }
-    }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const onSubmit = () => {
         if (ingSelected.length > 0) {
@@ -109,7 +111,8 @@ const AdminComidas = () => {
     useEffect(() => {
         GetIngredients();
         GetFoods();
-    }, []);
+    }, [GetFoods, GetIngredients]);
+
     return (
         <>
             {spinner > 0 && (
@@ -169,7 +172,7 @@ const AdminComidas = () => {
                                         {
                                             ingSelected.map((ing) => (
                                                 <List.Item>
-                                                    <Label horizontal>{ingredients.find((i) => i.value == ing.id).text}</Label>
+                                                    <Label horizontal>{ingredients.find((i) => i.value === ing.id).text}</Label>
                                                     <Input
                                                         placeholder='12'
                                                         size="small"
