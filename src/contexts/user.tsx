@@ -2,7 +2,7 @@ import React, {useReducer, useContext, Dispatch} from 'react';
 
 const initialState = (user) => ({
     user: user ?? null,
-    spinner: false,
+    spinner: 0,
 });
 
 const StateContext = React.createContext(initialState(null));

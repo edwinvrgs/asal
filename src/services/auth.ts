@@ -18,7 +18,7 @@ export const login = async (data) => {
         return response;
     } catch (e) {
         console.log('Error in Login service');
-        console.log(e);
+        return e;
     }
 }
 
@@ -31,6 +31,37 @@ export const logout = async () => {
         return response;
     } catch (e) {
         console.log('Error in Logout service');
+        console.log(e);
+    }
+}
+
+export const getIngredientFetch = async () => {
+    try {
+        const response = await API.get("ingredientes");
+
+        return response;
+    } catch (e) {
+        console.log('Error getting ingredient');
+        return e;
+    }
+}
+
+export const getFoodsFetch = async () => {
+    try {
+        const response = await API.get("recetas");
+
+        return response;
+    } catch (e) {
+        console.log('Error getting foods');
+        return e;
+    }
+}
+
+export const createFoodPost = (data) => {
+    try {
+        return API.post("recetas", data);
+    } catch (e) {
+        console.log('Error creating receta');
         console.log(e);
     }
 }

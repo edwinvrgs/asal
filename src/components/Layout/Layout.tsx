@@ -3,12 +3,17 @@ import {Icon, Menu} from 'semantic-ui-react'
 import {AsalLogo} from "../../assets";
 import {updateUser, useUserDispatch} from "../../contexts/user";
 import {logout} from "../../services";
+import {useHistory} from "react-router-dom";
 
 const Layout = () => {
     const [activeItem, setActiveItem] = useState('dashboard');
     const dispatch = useUserDispatch();
+    const history = useHistory();
 
-    const handleItemClick = (e, { name = 'dashboard' }) => setActiveItem(name);
+    const handleItemClick = (e, { name = 'dashboard' }) => {
+        setActiveItem(name);
+        history.push(name)
+    }
 
     const onLogout = async (e, props) => {
         try {

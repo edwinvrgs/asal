@@ -3,6 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { SignUp, Login, Dashboard } from '../pages';
 import { Layout } from '../components'
 import {useUserState} from "../contexts/user";
+import AdminComidas from "../pages/adminComidas/AdminComidas";
 
 export const withAuth = (WrappedComponent) => {
     return () => {
@@ -30,13 +31,13 @@ export const routes = [
         component: withAuth(Layout),
         routes: [
             {
-                path: '/dashboard',
+                path: ['/dashboard', '/'],
                 component: Dashboard,
                 exact: true
             },
             {
                 path: '/comidas',
-                component: Dashboard,
+                component: AdminComidas,
                 exact: true
             },
         ],
