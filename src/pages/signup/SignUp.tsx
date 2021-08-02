@@ -12,7 +12,7 @@ import {signUp} from "../../services";
 import {Input} from "../../components";
 
 const userSchema = yup.object().shape({
-    nombre: yup.string().required(),
+    nombre: yup.string().max(20).required(),
     email: yup.string().email().required(),
     password: yup.string().required().min(5),
     sexo: yup.string().oneOf(["H", "M"]).required(),
