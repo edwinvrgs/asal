@@ -78,15 +78,17 @@ const Perfil = () => {
                 <Grid columns={2} relaxed='very' centered>
                     <Grid.Column>
                         <Card centered>
-                            <StyledImage
-                              src={
-                                  user?.sexo === 'M'
-                                ? 'https://react.semantic-ui.com/images/avatar/large/molly.png'
-                                : 'https://react.semantic-ui.com/images/avatar/large/matthew.png'
-                              }
-                              wrapped
-                              ui={false}
-                            />
+                            {user?.id && (
+                              <StyledImage
+                                src={
+                                    user?.sexo === 'M'
+                                      ? 'https://react.semantic-ui.com/images/avatar/large/molly.png'
+                                      : 'https://react.semantic-ui.com/images/avatar/large/matthew.png'
+                                }
+                                wrapped
+                                ui={false}
+                              />
+                            )}
                             <Card.Content>
                                 <Card.Header>{user?.name}</Card.Header>
                                 <Card.Meta>
