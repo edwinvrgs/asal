@@ -4,6 +4,7 @@ import { SignUp, Login, Dashboard } from '../pages';
 import { Layout } from '../components'
 import {useUserState} from "../contexts/user";
 import AdminComidas from "../pages/adminComidas/AdminComidas";
+import Perfil from "../pages/perfil/Perfil";
 
 export const withAuth = (WrappedComponent) => {
     return () => {
@@ -38,6 +39,11 @@ export const routes = [
             {
                 path: '/comidas',
                 component: AdminComidas,
+                exact: true
+            },
+            {
+                path: ['/perfil'],
+                component: Perfil,
                 exact: true
             },
         ],

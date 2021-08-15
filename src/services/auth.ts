@@ -65,3 +65,14 @@ export const createFoodPost = (data) => {
         console.log(e);
     }
 }
+
+export const getUserInfoFetch = async () => {
+    try {
+        const response = await API.get("auth/user");
+
+        return response;
+    } catch (e) {
+        console.log('Error getting the user information');
+        return e;
+    }
+}

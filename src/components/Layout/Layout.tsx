@@ -51,9 +51,9 @@ const Layout = () => {
 
             <Menu.Menu position='right'>
                 <Menu.Item
-                    name='user icon'
+                    name='perfil'
                     position='right'
-                    active={activeItem === 'user icon'}
+                    active={activeItem === 'perfil'}
                     onClick={handleItemClick}
                 >
                     <Icon name='user' />
