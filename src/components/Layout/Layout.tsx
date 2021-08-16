@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { useLocation } from 'react-router-dom'
 import {Icon, Menu} from 'semantic-ui-react'
 import {AsalLogo} from "../../assets";
 import {updateUser, useUserDispatch} from "../../contexts/user";
@@ -6,7 +7,10 @@ import {logout} from "../../services";
 import {useHistory} from "react-router-dom";
 
 const Layout = () => {
-    const [activeItem, setActiveItem] = useState('dashboard');
+    const location = useLocation();
+
+    const [activeItem, setActiveItem] = useState(location.pathname.split('/').slice(-1)[0]);
+
     const dispatch = useUserDispatch();
     const history = useHistory();
 

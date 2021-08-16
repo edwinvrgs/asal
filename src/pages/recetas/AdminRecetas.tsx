@@ -155,7 +155,7 @@ const AdminRecetas = () => {
                                     onChange={addIngredient}
                                 />
                                 <Message
-                                    header='Selecciona los ingrediente que componen tu receta!'
+                                    header='Selecciona los ingredientes que componen tu receta!'
                                     content='y a continuacion cuantos gr de cada ingrediente'
                                 />
                                 {errorMessage && (
