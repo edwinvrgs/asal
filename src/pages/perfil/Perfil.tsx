@@ -39,7 +39,7 @@ const Perfil = () => {
         } catch (e) {
             console.log(e);
         } finally {
-            dispatch(setSpinner(0))
+            dispatch(setSpinner(1))
         }
     }
 

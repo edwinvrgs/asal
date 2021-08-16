@@ -4,6 +4,7 @@ import {Button, Dimmer, Form, Grid, Header, Image, Loader, Segment} from "semant
 import {Controller, useForm} from "react-hook-form";
 import DatePicker from "react-datepicker";
 import {toast} from "react-toastify";
+import {format, isDate, subYears} from "date-fns";
 
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -14,6 +15,19 @@ import {setSpinner, useUserDispatch, useUserState} from "../../contexts/user";
 import {AsalLogo} from "../../assets";
 import {signUp} from "../../services";
 import {Input} from "../../components";
+
+function parseDateString(value: Date) {
+    if (!isDate(value)) {
+        console.log("Not a valid date");
+        console.log({ value })
+
+        return null;
+    }
+
+    return format(value, "dd-MM-yyyy");
+}
+
+const today = new Date();
 
 const userSchema = yup.object().shape({
     nombre: yup.string().max(20).required(),
@@ -34,10 +48,16 @@ const SignUp = () => {
     const dispatch = useUserDispatch();
 
     const onSubmit = async data => {
+
+        const parsedData = {
+            ...data,
+            fecha_nacimiento: parseDateString(data.fecha_nacimiento)
+        };
+
         try {
             dispatch(setSpinner(1))
-            await signUp(data);
-            alert('Usuario creado con exito');
+            const response = await signUp(parsedData);
+            toast.success(response?.data?.message);
 
             history.push('login')
         } catch (e) {
@@ -83,21 +103,19 @@ const SignUp = () => {
                                     />
                                 }
                             />
-                            <Input name="edad" icon="user" type="number" placeholder="Ingrese su edad" control={control} />
 
                             <Controller
                                 control={control}
                                 name="fecha_nacimiento"
                                 render={({field, fieldState: { error }}) => (
                                     <>
-    e                                   <Form.Field>
+                                        <Form.Field>
                                             <label htmlFor="fecha_nacimiento">Ingrese su fecha de nacimiento</label>
                                         </Form.Field>
                                         <Form.Field error={error?.message}>
                                             <DatePicker
                                                 selected={field.value}
-                                                onChange={field.onChange}
-                                                dateFormat="d-M-Y"
+                                                onChange={(date) => field.onChange(date)}
                                             />
                                         </Form.Field>
                                     </>
@@ -105,6 +123,7 @@ const SignUp = () => {
                             />
 
                             <Input name="peso" icon="user" type="number" placeholder="Ingrese su peso" control={control} />
+
                             <Controller
                                 control={control}
                                 name="actividad_fisica"
