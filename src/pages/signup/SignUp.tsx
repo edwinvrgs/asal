@@ -3,6 +3,7 @@ import {Redirect, useHistory} from "react-router-dom";
 import {Button, Dimmer, Form, Grid, Header, Image, Loader, Segment} from "semantic-ui-react";
 import {Controller, useForm} from "react-hook-form";
 import DatePicker from "react-datepicker";
+import {toast} from "react-toastify";
 
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -40,7 +41,8 @@ const SignUp = () => {
 
             history.push('login')
         } catch (e) {
-            console.log(e);
+            toast.error(e.response?.data?.message)
+            console.dir(e);
         } finally {
             dispatch(setSpinner(0))
         }
