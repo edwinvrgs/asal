@@ -49,7 +49,7 @@ const ConsumirTab = () => {
     }
 
     function removeRecipe(id) {
-        const filteredValues = selectedRecipes.filter((recipe) => recipe.id === id);
+        const filteredValues = selectedRecipes.filter((recipe) => recipe.id !== id);
 
         setSelectedRecipes(filteredValues);
     }
