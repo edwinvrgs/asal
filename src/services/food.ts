@@ -1,26 +1,38 @@
 import {API} from "../config/api";
 
-export const getIngredientFetch = async () => {
+export const getIngredients = async () => {
     try {
         return await API.get("ingredientes");
     } catch (e) {
-        console.log('Error getting ingredient');
+        console.log('Error getting ingredients');
         return e;
     }
 }
-export const getFoodsFetch = async () => {
+
+export const getRecipes = async () => {
     try {
         return await API.get("recetas");
+    } catch (e) {
+        console.log('Error getting recipes');
+        return e;
+    }
+}
+
+export const createRecipes = (data) => {
+    try {
+        return API.post("recetas", data);
+    } catch (e) {
+        console.log('Error creating recipes');
+        console.log(e);
+    }
+}
+
+export const getFoods = async () => {
+    try {
+        return await API.get("user/comida");
     } catch (e) {
         console.log('Error getting foods');
         return e;
     }
 }
-export const createFoodPost = (data) => {
-    try {
-        return API.post("recetas", data);
-    } catch (e) {
-        console.log('Error creating receta');
-        console.log(e);
-    }
-}
+
