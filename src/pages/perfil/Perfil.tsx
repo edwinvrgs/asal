@@ -43,7 +43,7 @@ const Perfil = () => {
                 });
             }
         } finally {
-            dispatch(setSpinner(0))
+            dispatch(setSpinner(1))
         }
     }
 

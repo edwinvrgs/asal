@@ -3,7 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { SignUp, Login, Dashboard } from '../pages';
 import { Layout } from '../components'
 import {useUserState} from "../contexts/user";
-import AdminComidas from "../pages/adminComidas/AdminComidas";
+import AdminRecetas from "../pages/recetas/AdminRecetas";
 import Perfil from "../pages/perfil/Perfil";
 
 export const withAuth = (WrappedComponent) => {
@@ -38,7 +38,7 @@ export const routes = [
             },
             {
                 path: '/comidas',
-                component: AdminComidas,
+                component: AdminRecetas,
                 exact: true
             },
             {

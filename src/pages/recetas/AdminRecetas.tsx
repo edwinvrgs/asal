@@ -14,10 +14,10 @@ import {
 import {ColumnFood} from "./styled";
 import useFormInput from "../../hooks/useFormInput";
 import {setSpinner, useUserDispatch, useUserState} from "../../contexts/user";
-import {getIngredientFetch, getFoodsFetch, createFoodPost} from "../../services";
+import {getIngredients, getRecipes, createRecipes} from "../../services";
 
 
-const AdminComidas = () => {
+const AdminRecetas = () => {
 
     const search = useFormInput('');
     const foodName = useFormInput('');
@@ -35,7 +35,7 @@ const AdminComidas = () => {
 
     const GetIngredients = useCallback(async () => {
         dispatch(setSpinner(spinner+1))
-        const response = await getIngredientFetch();
+        const response = await getIngredients();
         try {
             if (response?.status === 200){
                 setIngredients(response.data.data.map(
@@ -50,7 +50,7 @@ const AdminComidas = () => {
 
     const GetFoods = useCallback(async () => {
         dispatch(setSpinner(spinner+1))
-        const response = await getFoodsFetch();
+        const response = await getRecipes();
         try {
             if (response?.status === 200){
                 setFoods(response.data.data)
@@ -76,7 +76,7 @@ const AdminComidas = () => {
             nombre: foodName.value,
             ingredientes: ingSelected,
         }
-        const response = await createFoodPost(data);
+        const response = await createRecipes(data);
         try {
             if (response?.status === 200){
                 GetFoods()
@@ -129,7 +129,7 @@ const AdminComidas = () => {
                                 <List.Item>
                                     <List.Content>
                                         <List.Header>{food.nombre}</List.Header>
-                                        comida
+                                        Receta
                                     </List.Content>
                                 </List.Item>
                             ))}
@@ -138,11 +138,11 @@ const AdminComidas = () => {
                     <ColumnFood>
                         <Form onSubmit={onSubmit}>
                             <Form.Field required>
-                                <label>Nombre de la comida</label>
+                                <label>Nombre de la Receta</label>
                                 <Input placeholder='nombre' {...foodName} required />
                             </Form.Field>
                             <Form.Field required>
-                                <label>Alimentos</label>
+                                <label>Ingredientes</label>
                                 <Dropdown
                                     button
                                     className='icon'
@@ -151,12 +151,12 @@ const AdminComidas = () => {
                                     icon='food'
                                     options={ingredients}
                                     search
-                                    text='Selecciona tu alimento'
+                                    text='Selecciona tu ingrediente'
                                     onChange={addIngredient}
                                 />
                                 <Message
-                                    header='Selecciona los alimentos que componen tu comida!'
-                                    content='y a continuacion cuantos gr de cada alimento'
+                                    header='Selecciona los ingredientes que componen tu receta!'
+                                    content='y a continuacion cuantos gr de cada ingrediente'
                                 />
                                 {errorMessage && (
                                     <Message
@@ -195,7 +195,7 @@ const AdminComidas = () => {
                                 )
                             }
                             <br/>
-                            <Button type='submit' positive floated="right">Crear comida</Button>
+                            <Button type='submit' positive floated="right">Crear receta</Button>
                         </Form>
                     </ColumnFood>
                 </Grid.Row>
@@ -204,4 +204,4 @@ const AdminComidas = () => {
     );
 };
 
-export default AdminComidas;
+export default AdminRecetas;
