@@ -8,7 +8,24 @@ import * as yup from "yup";
 import {setSpinner, updateUser, useUserDispatch, useUserState} from "../../contexts/user";
 import {getUserInfoFetch, updateUserInfoPut} from "../../services";
 import {Input} from "../../components";
-import {StyledImage} from "./styled";
+import {StyledCard, StyledImage} from "./styled";
+import {differenceInYears, format, isDate, subYears} from "date-fns";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import {toast} from "react-toastify";
+
+
+function parseDateString(value: Date) {
+    if (!isDate(value)) {
+        console.log("Not a valid date");
+        console.log({ value })
+
+        return null;
+    }
+
+    return format(value, "dd-MM-yyyy");
+}
+
 
 const Perfil = () => {
     const { user, spinner } = useUserState();
@@ -16,9 +33,8 @@ const Perfil = () => {
 
     const userSchema = yup.object().shape({
         nombre: yup.string().max(20).required(),
-        email: yup.string().email().required(),
         sexo: yup.string().oneOf(["H", "M"]).required(),
-        edad: yup.number().positive().integer().required().min(18),
+        fecha_nacimiento: yup.date().required(),
         peso: yup.number().positive().integer().required().min(10),
         actividad_fisica: yup.number().oneOf([1, 2, 3, 4, 5, 6]).required(),
     });
@@ -28,6 +44,7 @@ const Perfil = () => {
     });
 
     async function fetchMyAPI() {
+        dispatch(setSpinner(1))
         const response = await getUserInfoFetch();
         try {
             if (response?.status === 200){
@@ -35,31 +52,34 @@ const Perfil = () => {
                 const userData = response.data;
                 reset({
                     nombre: userData.name,
-                    email: userData.email,
                     sexo: userData.sexo,
-                    edad: userData.edad,
+                    fecha_nacimiento: new Date(userData.fecha_nacimiento),
                     peso: userData.peso,
                     actividad_fisica: Number(userData.actividad_fisica),
                 });
             }
         } finally {
-            dispatch(setSpinner(1))
+            dispatch(setSpinner(0))
         }
     }
 
     const onSubmit = async data => {
         try {
             dispatch(setSpinner(1))
-            const response = await updateUserInfoPut(data);
+            const parsedData = {
+                ...data,
+                fecha_nacimiento: parseDateString(data.fecha_nacimiento)
+            };
+            const response = await updateUserInfoPut(parsedData);
             try {
                 if (response?.status === 200){
                     dispatch(updateUser(response.data))
                     fetchMyAPI();
-                    alert('Usuario actualizado con exito');
+                    toast.success('Usuario actualizado con exito');
                 }
             } finally {
-                if (response?.response?.status === 422 || response?.response?.status === 401) {
-                    alert('Hubo un problema actualizando la informacion del usuario');
+                if ([422, 401, 400].includes(response?.response?.status)) {
+                    toast.error('Hubo un problema actualizando la informacion del usuario');
                 }
                 dispatch(setSpinner(0))
             }
@@ -71,9 +91,8 @@ const Perfil = () => {
     }
 
     useEffect(() => {
-        dispatch(setSpinner(1))
         fetchMyAPI();
-    }, [dispatch, fetchMyAPI])
+    }, [])
 
     return (
         <>
@@ -85,7 +104,7 @@ const Perfil = () => {
             <Segment>
                 <Grid columns={2} relaxed='very' centered>
                     <Grid.Column>
-                        <Card centered>
+                        <StyledCard centered>
                             {user?.id && (
                               <StyledImage
                                 src={
@@ -100,21 +119,23 @@ const Perfil = () => {
                             <Card.Content>
                                 <Card.Header>{user?.name}</Card.Header>
                                 <Card.Meta>
-                                    <span className='date'>{user?.edad} años de edad</span>
+                                    <span className='date'>
+                                        {`${differenceInYears(new Date(), new Date(user?.fecha_nacimiento))} años de edad`}
+                                    </span>
                                 </Card.Meta>
                                 <Card.Description>
                                     {user?.email}
                                 </Card.Description>
                             </Card.Content>
-                            <Card.Content extra>
+                            <Card.Content>
                                 <Icon name='male' />
                                 {user?.peso} Kg
                             </Card.Content>
-                            <Card.Content extra>
+                            <Card.Content>
                                 <Icon name='heartbeat' />
                                 {user?.actividad_fisica}/6 Actividad fisica
                             </Card.Content>
-                            <Card.Content extra>
+                            <Card.Content>
                                 <Header as='h4' icon='calendar alternate outline' content="Consumo Diario Ideal" />
                             </Card.Content>
                             <Card.Content extra>
@@ -145,7 +166,7 @@ const Perfil = () => {
                                     <Label.Detail>proteinas</Label.Detail>
                                 </Label>
                             </Card.Content>
-                        </Card>
+                        </StyledCard>
                     </Grid.Column>
                     <Grid.Column>
                         <Form size='large' onSubmit={handleSubmit(onSubmit)}>
@@ -167,7 +188,23 @@ const Perfil = () => {
                                     />
                                   }
                                 />
-                                <Input name="edad" icon="user" type="number" placeholder="Ingrese su edad" control={control} />
+                                <Controller
+                                  control={control}
+                                  name="fecha_nacimiento"
+                                  render={({field, fieldState: { error }}) => (
+                                    <>
+                                        <Form.Field>
+                                            <label htmlFor="fecha_nacimiento">Ingrese su fecha de nacimiento</label>
+                                        </Form.Field>
+                                        <Form.Field error={error?.message}>
+                                            <DatePicker
+                                              selected={field.value}
+                                              onChange={(date) => field.onChange(date)}
+                                            />
+                                        </Form.Field>
+                                    </>
+                                  )}
+                                />
                                 <Input name="peso" icon="user" type="number" placeholder="Ingrese su peso" control={control} />
                                 <Controller
                                   control={control}
@@ -206,7 +243,6 @@ const Perfil = () => {
                                     </>
                                   }
                                 />
-                                <Input name="email" icon="mail" placeholder="Ingrese su correo" control={control} />
                                 <Button type="submit" color='teal' fluid size='large'>Actualizar</Button>
                             </Segment>
                         </Form>
