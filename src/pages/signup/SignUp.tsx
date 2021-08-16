@@ -55,16 +55,16 @@ const SignUp = () => {
         };
 
         try {
-            dispatch(setSpinner(1))
+            dispatch(setSpinner(1));
             const response = await signUp(parsedData);
             toast.success(response?.data?.message);
 
-            history.push('login')
+            history.push('login');
         } catch (e) {
-            toast.error(e.response?.data?.message)
             console.dir(e);
+            toast.error(e.response?.data?.message);
         } finally {
-            dispatch(setSpinner(0))
+            dispatch(setSpinner(0));
         }
     }
 

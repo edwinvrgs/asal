@@ -36,3 +36,11 @@ export const getFoods = async () => {
     }
 }
 
+export const createFood = (data) => {
+    try {
+        return API.post("user/comida", data);
+    } catch (e) {
+        console.log('Error creating foods');
+        console.log(e);
+    }
+}

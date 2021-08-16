@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {getRecipes} from "../../../services";
+import {createFood, getRecipes} from "../../../services";
 import {Label, Form, List, Message, Tab, Button, Dropdown, Input} from "semantic-ui-react";
 import {ColumnFood} from "../../recetas/styled";
+import {toast} from "react-toastify";
+import {setSpinner, useUserDispatch, useUserState} from "../../../contexts/user";
 
 type Receta = {
     nombre: string;
@@ -37,6 +39,9 @@ const ConsumirTab = () => {
     const [selectedRecipes, setSelectedRecipes] = useState<Receta[]>([]);
     const [foodType, setFoodType] = useState(FoodTypes[0]);
 
+    const { spinner } = useUserState();
+    const dispatch = useUserDispatch();
+
     const mappedRecipes = recipes?.map(recipe => ({
         key: recipe.id,
         text: recipe.nombre,
@@ -61,15 +66,44 @@ const ConsumirTab = () => {
     }
 
     function selectFoodType(_, data) {
-        setFoodType(data.value);
+        const value = FoodTypes.find(el => el.value === data.value);
+
+        if (!value) {
+            return null;
+        }
+
+        setFoodType(value);
     }
 
-    function onSubmit() {
-        console.log({ foodType, selectedRecipes });
+    async function onSubmit() {
+        const data = {
+            tipo: foodType.text,
+            recetas: selectedRecipes.map(recipes => recipes.id),
+        };
+
+        try {
+            dispatch(setSpinner(1));
+            const response = await createFood(data);
+            toast.success(response?.data?.message);
+        } catch (e) {
+            console.dir(e);
+
+            const messages = e.response?.data?.message;
+
+            if(!Array.isArray(messages)) {
+                return;
+            }
+
+            Object.keys(messages).map(key =>
+                toast.error(messages[key][0])
+            );
+        } finally {
+            dispatch(setSpinner(0));
+        }
     }
 
     return (
-        <Tab.Pane loading={recipes === null}>
+        <Tab.Pane loading={recipes === null || spinner > 0}>
             {recipes && recipes.length > 0 ? (
                 <ColumnFood>
                     <Form onSubmit={onSubmit}>
@@ -103,7 +137,7 @@ const ConsumirTab = () => {
                                 <List divided selection>
                                     {
                                         selectedRecipes.map((recipe) => (
-                                            <List.Item>
+                                            <List.Item key={recipe.id}>
                                                 <Label horizontal>{recipe.nombre}</Label>
                                                 <Button
                                                     circular
