@@ -3,7 +3,7 @@ import {getRecipes} from "../../../services";
 import {Tab} from "semantic-ui-react";
 
 type Receta = {
-    name: string;
+    nombre: string;
 }
 
 function useRecetas() {
@@ -13,7 +13,7 @@ function useRecetas() {
         async function fetchData() {
             try {
                 const response = await getRecipes();
-                setData(response.data);
+                setData(response.data.data);
             } catch (e) {
                 console.log(e);
             }
@@ -33,7 +33,7 @@ const ConsumirTab = () => {
             {recetas && recetas.length > 0 ? (
                 recetas.map(receta => (
                     <div>
-                        {receta.name}
+                        {receta.nombre}
                     </div>
                 ))) : (
                 <div>No hay recetas para mostrar</div>
