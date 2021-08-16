@@ -76,3 +76,14 @@ export const getUserInfoFetch = async () => {
         return e;
     }
 }
+
+export const updateUserInfoPut = async (data) => {
+    try {
+        const response = await API.put("user", data);
+
+        return response;
+    } catch (e) {
+        console.log('Error getting the user information');
+        return e;
+    }
+}

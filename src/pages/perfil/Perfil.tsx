@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-import {useHistory} from "react-router-dom";
 import {Button, Card, Dimmer, Divider, Form, Grid, Header, Icon, Label, Loader, Segment} from "semantic-ui-react";
 import {Controller, useForm} from "react-hook-form";
 
@@ -7,12 +6,11 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import {setSpinner, updateUser, useUserDispatch, useUserState} from "../../contexts/user";
-import {getUserInfoFetch, login, signUp} from "../../services";
+import {getUserInfoFetch, updateUserInfoPut} from "../../services";
 import {Input} from "../../components";
 import {StyledImage} from "./styled";
 
 const Perfil = () => {
-    const history = useHistory();
     const { user, spinner } = useUserState();
     const dispatch = useUserDispatch();
 
@@ -29,13 +27,42 @@ const Perfil = () => {
         resolver: yupResolver(userSchema)
     });
 
+    async function fetchMyAPI() {
+        const response = await getUserInfoFetch();
+        try {
+            if (response?.status === 200){
+                dispatch(updateUser(response.data))
+                const userData = response.data;
+                reset({
+                    nombre: userData.name,
+                    email: userData.email,
+                    sexo: userData.sexo,
+                    edad: userData.edad,
+                    peso: userData.peso,
+                    actividad_fisica: Number(userData.actividad_fisica),
+                });
+            }
+        } finally {
+            dispatch(setSpinner(0))
+        }
+    }
+
     const onSubmit = async data => {
         try {
             dispatch(setSpinner(1))
-            await signUp(data);
-            alert('Usuario creado con exito');
-
-            history.push('login')
+            const response = await updateUserInfoPut(data);
+            try {
+                if (response?.status === 200){
+                    dispatch(updateUser(response.data))
+                    fetchMyAPI();
+                    alert('Usuario actualizado con exito');
+                }
+            } finally {
+                if (response?.response?.status === 422 || response?.response?.status === 401) {
+                    alert('Hubo un problema actualizando la informacion del usuario');
+                }
+                dispatch(setSpinner(0))
+            }
         } catch (e) {
             console.log(e);
         } finally {
@@ -45,27 +72,8 @@ const Perfil = () => {
 
     useEffect(() => {
         dispatch(setSpinner(1))
-        async function fetchMyAPI() {
-            const response = await getUserInfoFetch();
-            try {
-                if (response?.status === 200){
-                    dispatch(updateUser(response.data))
-                    const userData = response.data;
-                    reset({
-                        nombre: userData.name,
-                        email: userData.email,
-                        sexo: userData.sexo,
-                        edad: userData.edad,
-                        peso: userData.peso,
-                        actividad_fisica: Number(userData.actividad_fisica),
-                    });
-                }
-            } finally {
-                dispatch(setSpinner(0))
-            }
-        }
         fetchMyAPI();
-    }, [])
+    }, [dispatch, fetchMyAPI])
 
     return (
         <>
