@@ -15,17 +15,15 @@ const Input = ({ control, name, type, icon, placeholder }: InputProps) => (
         control={control}
         name={name}
         render={({field, fieldState: { error }}) => (
-            <>
-                <Form.Input
-                    type={type}
-                    iconPosition='left'
-                    fluid
-                    icon={icon}
-                    placeholder={placeholder}
-                    error={error?.message}
-                    {...field}
-                />
-            </>
+            <Form.Input
+                type={type}
+                iconPosition='left'
+                fluid
+                icon={icon}
+                placeholder={placeholder}
+                error={error?.message}
+                {...field}
+            />
         )}
     />
 )

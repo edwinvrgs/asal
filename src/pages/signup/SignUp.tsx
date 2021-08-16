@@ -2,9 +2,12 @@ import React from 'react';
 import {Redirect, useHistory} from "react-router-dom";
 import {Button, Dimmer, Form, Grid, Header, Image, Loader, Segment} from "semantic-ui-react";
 import {Controller, useForm} from "react-hook-form";
+import DatePicker from "react-datepicker";
 
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 import {setSpinner, useUserDispatch, useUserState} from "../../contexts/user";
 import {AsalLogo} from "../../assets";
@@ -16,7 +19,7 @@ const userSchema = yup.object().shape({
     email: yup.string().email().required(),
     password: yup.string().required().min(5),
     sexo: yup.string().oneOf(["H", "M"]).required(),
-    edad: yup.number().positive().integer().required().min(18),
+    fecha_nacimiento: yup.date().required(),
     peso: yup.number().positive().integer().required().min(10),
     actividad_fisica: yup.number().oneOf([1, 2, 3, 4, 5, 6]).required(),
 });
@@ -79,6 +82,26 @@ const SignUp = () => {
                                 }
                             />
                             <Input name="edad" icon="user" type="number" placeholder="Ingrese su edad" control={control} />
+
+                            <Controller
+                                control={control}
+                                name="fecha_nacimiento"
+                                render={({field, fieldState: { error }}) => (
+                                    <>
+                                        <Form.Field>
+                                            <label htmlFor="fecha_nacimiento">Ingrese su fecha de nacimiento</label>
+                                        </Form.Field>
+                                        <Form.Field error={error?.message}>
+                                            <DatePicker
+                                                selected={field.value}
+                                                onChange={field.onChange}
+                                                dateFormat="d-M-Y"
+                                            />
+                                        </Form.Field>
+                                    </>
+                                )}
+                            />
+
                             <Input name="peso" icon="user" type="number" placeholder="Ingrese su peso" control={control} />
                             <Controller
                                 control={control}
