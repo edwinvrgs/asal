@@ -88,7 +88,7 @@ const SignUp = () => {
                                 name="fecha_nacimiento"
                                 render={({field, fieldState: { error }}) => (
                                     <>
-                                        <Form.Field>
+    e                                   <Form.Field>
                                             <label htmlFor="fecha_nacimiento">Ingrese su fecha de nacimiento</label>
                                         </Form.Field>
                                         <Form.Field error={error?.message}>
