@@ -35,3 +35,11 @@ export const logout = async () => {
     }
 }
 
+export const getUserInfoFetch = async () => {
+    try {
+        return await API.get("auth/user");
+    } catch (e) {
+        console.log('Error getting the user information');
+        return e;
+    }
+}
