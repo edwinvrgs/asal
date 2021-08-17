@@ -3,7 +3,7 @@ import {createFood, getRecipes} from "../../../services";
 import {Label, Form, List, Message, Tab, Button, Dropdown} from "semantic-ui-react";
 import {ColumnFood} from "../../recetas/styled";
 import {toast} from "react-toastify";
-import {setSpinner, useUserDispatch, useUserState} from "../../../contexts/user";
+import {setSpinner, updateUser, useUserDispatch, useUserState} from "../../../contexts/user";
 
 type Receta = {
     nombre: string;
@@ -80,11 +80,12 @@ const ConsumirTab = () => {
             tipo: foodType.text,
             recetas: selectedRecipes.map(recipes => recipes.id),
         };
-
+        dispatch(setSpinner(1));
+        const response = await createFood(data);
         try {
-            dispatch(setSpinner(1));
-            const response = await createFood(data);
-            toast.success(response?.data?.message);
+            if (response?.status === 200){
+                toast.success(response?.data?.message);
+            }
         } catch (e) {
             console.dir(e);
 
@@ -98,6 +99,9 @@ const ConsumirTab = () => {
                 toast.error(messages[key][0])
             );
         } finally {
+            if ([422, 401, 404, 400].includes(response?.response?.status)) {
+                toast.error('Hubo un problema agregando la comida');
+            }
             dispatch(setSpinner(0));
         }
     }

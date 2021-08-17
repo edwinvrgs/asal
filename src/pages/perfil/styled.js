@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Image } from 'semantic-ui-react';
+import { Image, Card } from 'semantic-ui-react';
 
 export const StyledImage = styled(Image)`
   &&&{
@@ -11,3 +11,12 @@ export const StyledImage = styled(Image)`
     }
   }
 `;
+
+export const StyledCard = styled(Card)`
+  && {
+    .extra.content {
+        padding-top: 4px;
+        padding-bottom: 4px;
+      }
+  }
+`
