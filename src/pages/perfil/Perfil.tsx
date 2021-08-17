@@ -92,7 +92,7 @@ const Perfil = () => {
 
     useEffect(() => {
         fetchMyAPI();
-    }, [dispatch, reset])
+    }, [dispatch, fetchMyAPI, reset])
 
     return (
         <>
