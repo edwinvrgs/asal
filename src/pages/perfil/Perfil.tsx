@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {Button, Card, Dimmer, Divider, Form, Grid, Header, Icon, Label, Loader, Segment} from "semantic-ui-react";
 import {Controller, useForm} from "react-hook-form";
 
@@ -43,8 +43,7 @@ const Perfil = () => {
         resolver: yupResolver(userSchema)
     });
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    async function fetchMyAPI() {
+    const fetchMyAPI = useCallback(async() => {
         dispatch(setSpinner(1))
         const response = await getUserInfoFetch();
         try {
@@ -62,7 +61,7 @@ const Perfil = () => {
         } finally {
             dispatch(setSpinner(0))
         }
-    }
+    }, [dispatch, reset]);
 
     const onSubmit = async data => {
         try {
