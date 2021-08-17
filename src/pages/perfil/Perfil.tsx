@@ -43,6 +43,7 @@ const Perfil = () => {
         resolver: yupResolver(userSchema)
     });
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     async function fetchMyAPI() {
         dispatch(setSpinner(1))
         const response = await getUserInfoFetch();
