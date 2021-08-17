@@ -9,7 +9,7 @@ import {setSpinner, updateUser, useUserDispatch, useUserState} from "../../conte
 import {getUserInfoFetch, updateUserInfoPut} from "../../services";
 import {Input} from "../../components";
 import {StyledCard, StyledImage} from "./styled";
-import {differenceInYears, format, isDate, subYears} from "date-fns";
+import {differenceInYears, format, isDate} from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {toast} from "react-toastify";

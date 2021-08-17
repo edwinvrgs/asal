@@ -3,7 +3,7 @@ import {createFood, getRecipes} from "../../../services";
 import {Label, Form, List, Message, Tab, Button, Dropdown} from "semantic-ui-react";
 import {ColumnFood} from "../../recetas/styled";
 import {toast} from "react-toastify";
-import {setSpinner, updateUser, useUserDispatch, useUserState} from "../../../contexts/user";
+import {setSpinner, useUserDispatch, useUserState} from "../../../contexts/user";
 
 type Receta = {
     nombre: string;
