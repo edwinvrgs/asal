@@ -4,7 +4,7 @@ import {Button, Dimmer, Form, Grid, Header, Image, Loader, Segment} from "semant
 import {Controller, useForm} from "react-hook-form";
 import DatePicker from "react-datepicker";
 import {toast} from "react-toastify";
-import {format, isDate, subYears} from "date-fns";
+import {format, isDate} from "date-fns";
 
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -26,8 +26,6 @@ function parseDateString(value: Date) {
 
     return format(value, "dd-MM-yyyy");
 }
-
-const today = new Date();
 
 const userSchema = yup.object().shape({
     nombre: yup.string().max(20).required(),

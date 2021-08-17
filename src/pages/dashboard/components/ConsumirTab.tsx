@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {createFood, getRecipes} from "../../../services";
-import {Label, Form, List, Message, Tab, Button, Dropdown, Input} from "semantic-ui-react";
+import {Label, Form, List, Message, Tab, Button, Dropdown} from "semantic-ui-react";
 import {ColumnFood} from "../../recetas/styled";
 import {toast} from "react-toastify";
 import {setSpinner, useUserDispatch, useUserState} from "../../../contexts/user";

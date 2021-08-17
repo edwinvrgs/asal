@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {getFoods} from "../../../services";
-import {Container, Header, Item, Segment, Tab} from "semantic-ui-react";
+import {Container, Header, Segment, Tab} from "semantic-ui-react";
 
 type Comida = {
     nombre: string;

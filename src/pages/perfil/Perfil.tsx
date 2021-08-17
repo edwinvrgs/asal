@@ -7,7 +7,7 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import {setSpinner, updateUser, useUserDispatch, useUserState} from "../../contexts/user";
-import {getUserInfoFetch, login, signUp} from "../../services";
+import {getUserInfoFetch, signUp} from "../../services";
 import {Input} from "../../components";
 import {StyledImage} from "./styled";
 
@@ -65,7 +65,7 @@ const Perfil = () => {
             }
         }
         fetchMyAPI();
-    }, [])
+    }, [dispatch, reset])
 
     return (
         <>
