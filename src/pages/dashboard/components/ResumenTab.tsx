@@ -11,47 +11,6 @@ type Comida = {
     }
 }
 
-const groupBy = key => array =>
-    array.reduce((objectsByKeyValue, obj) => {
-        const value = obj[key];
-        objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
-        return objectsByKeyValue;
-    }, {});
-
-function groupFoods(foods) {
-    const groupByDate = groupBy('fecha');
-    const groupByType = groupBy('tipo');
-
-    const foodsGroupedByDate = groupByDate(foods)
-
-    return Object.keys(foodsGroupedByDate).reduce((accum, key) => {
-        return {
-            ...accum,
-            [key]: groupByType(foodsGroupedByDate[key])
-        }
-    }, foodsGroupedByDate);
-}
-
-function useComidas() {
-    const [data, setData] = useState<Comida[] | null>(null);
-
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await getFoods();
-                // Flatten the array, removing the 'pivot' property
-                setData(response.data.data.map(({pivot, ...rest}) => ({...rest, ...pivot})));
-            } catch (e) {
-                console.log(e);
-            }
-        }
-
-        fetchData();
-    }, [])
-
-    return data;
-}
-
 const style = {
     h1: {
         marginTop: '3em',
@@ -69,26 +28,64 @@ const style = {
     },
 }
 
-const getPanes = (groupedFoods) => {
-    console.log({ groupedFoods })
+function useComidas() {
+    const [data, setData] = useState<Comida[] | null>(null);
 
-    const dates = groupedFoods ? Object.keys(groupedFoods) : [];
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const response = await getFoods();
+                setData(response.data.data);
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        fetchData();
+    }, [])
+
+    return data;
+}
+
+const getPanes = (foods) => {
+    console.log({ foods })
+
+    if (!foods) {
+        return null;
+    }
+
+    const dates = foods ? Object.keys(foods) : [];
 
     return dates.map(date => {
         return {
             menuItem: date,
             render: () => (
                 <Container>
-                    {Object.keys(groupedFoods[date]).map(type => (
-                        <>
-                            <Header as='h4' textAlign='center' style={style.h3} content={type} />
-                            <Segment.Group>
-                                {groupedFoods[date][type].map(food => (
-                                    <Segment>{food.nombre}</Segment>
-                                ))}
-                            </Segment.Group>
-                        </>
-                    ))}
+                    {Object.keys(foods[date]).map(type => {
+                        const { calorias, carbohidratos, grasas, proteinas, recetas } = foods[date][type];
+
+                        return (
+                            <>
+                                <Header as='h4' textAlign='center' style={style.h3} content={type} />
+                                <Segment.Group>
+                                    <Segment>
+                                        <b>Carbohidratos:</b> {carbohidratos}
+                                        {' - '}
+                                        <b>Calorias:</b> {calorias}
+                                        {' - '}
+                                        <b>Grasas:</b> {grasas}
+                                        {' - '}
+                                        <b>Proteinas:</b> {proteinas}
+                                    </Segment>
+                                </Segment.Group>
+                                <Segment.Group>
+                                    {recetas.map(recipe => (
+                                        <Segment>{recipe.nombre}</Segment>
+                                    ))}
+                                </Segment.Group>
+                            </>
+                        )
+                    })}
                 </Container>
             )
         }
@@ -98,14 +95,11 @@ const getPanes = (groupedFoods) => {
 const ResumenTab = () => {
     const foods = useComidas();
 
-    // We are sorting the foods by date and type
-    const groupedFoods = foods ? groupFoods(foods) : foods;
-
-    const panes = getPanes(groupedFoods);
+    const panes = getPanes(foods);
 
     return (
-        <Tab.Pane loading={groupedFoods === null}>
-            {groupedFoods ? (
+        <Tab.Pane loading={foods === null}>
+            {panes ? (
                 <Tab panes={panes} />
             ) : (
                 <div>No hay comidas para mostrar</div>
