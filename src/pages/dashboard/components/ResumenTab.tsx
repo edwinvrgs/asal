@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {getFoods} from "../../../services";
-import {Tab} from "semantic-ui-react";
+import {Container, Header, Item, Segment, Tab} from "semantic-ui-react";
 
 type Comida = {
     nombre: string;
@@ -52,37 +52,61 @@ function useComidas() {
     return data;
 }
 
+const style = {
+    h1: {
+        marginTop: '3em',
+    },
+    h2: {
+        margin: '4em 0em 2em',
+    },
+    h3: {
+        marginTop: '2em',
+        padding: '2em 0em',
+        textTransform: 'capitalize'
+    },
+    last: {
+        marginBottom: '300px',
+    },
+}
+
+const getPanes = (groupedFoods) => {
+    console.log({ groupedFoods })
+
+    const dates = groupedFoods ? Object.keys(groupedFoods) : [];
+
+    return dates.map(date => {
+        return {
+            menuItem: date,
+            render: () => (
+                <Container>
+                    {Object.keys(groupedFoods[date]).map(type => (
+                        <>
+                            <Header as='h4' textAlign='center' style={style.h3} content={type} />
+                            <Segment.Group>
+                                {groupedFoods[date][type].map(food => (
+                                    <Segment>{food.nombre}</Segment>
+                                ))}
+                            </Segment.Group>
+                        </>
+                    ))}
+                </Container>
+            )
+        }
+    })
+};
+
 const ResumenTab = () => {
     const foods = useComidas();
 
     // We are sorting the foods by date and type
     const groupedFoods = foods ? groupFoods(foods) : foods;
 
-    console.log({ groupedFoods })
-
-    const dates = groupedFoods ? Object.keys(groupedFoods) : [];
+    const panes = getPanes(groupedFoods);
 
     return (
         <Tab.Pane loading={groupedFoods === null}>
             {groupedFoods ? (
-                <ul>
-                    {dates.map(date => (
-                        <li>{date}
-                            <ul>
-                                {Object.keys(groupedFoods[date]).map(type => (
-                                    <li>
-                                        {type}
-                                        <ol>
-                                            {groupedFoods[date][type].map(food => (
-                                                <li>{food.nombre}</li>
-                                            ))}
-                                        </ol>
-                                    </li>
-                                ))}
-                            </ul>
-                        </li>
-                    ))}
-                </ul>
+                <Tab panes={panes} />
             ) : (
                 <div>No hay comidas para mostrar</div>
             )}
